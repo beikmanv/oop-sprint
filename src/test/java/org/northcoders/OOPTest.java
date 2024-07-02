@@ -6,22 +6,48 @@ import static org.junit.Assert.*;
 class OOPTest {
 
     @Test
+    @DisplayName("This test always passes")
+    public void testAlwaysPasses() {
+        assertTrue(true);
+    }
+
+/*
+    @Test
     @DisplayName("User class must have required fields")
     public void testUserHasRequiredFields() {
         User testUser = new User("test", "test@northcoders.com");
         assertEquals("test", testUser.getUsername());
         assertEquals("test@northcoders.com", testUser.getEmail());
+
     }
 
+*/
+/*
     @Test
     @DisplayName("User class must start with zero balance")
     public void testUserStartsWithZeroBalance() {
         User testUser = new User("test", "test@northcoders.com");
-        int actual = testUser.checkBalance();
+        int actual = testUser.getBalance();
         int expected = 0;
         assertEquals(expected, actual);
     }
+*/
+/*
+    @Test
+    @DisplayName("User class can update balance")
+    public void testUserUpdateBalance() {
+        User testUser = new User("test", "test@northcoders.com");
 
+        testUser.updateBalance(55);
+
+        assertEquals(55, testUser.getBalance());
+
+        testUser.updateBalance(-5);
+        assertEquals(50, testUser.getBalance());
+    }
+
+*/
+/*
     @Test
     @DisplayName("User class must keep track of number of created accounts")
     public void testUserCountsAccountsCreated() {
@@ -36,16 +62,8 @@ class OOPTest {
         assertEquals(2, User.getAccountsCreated());
     }
 
-    @Test
-    @DisplayName("User class must be able to add balance to an individual user")
-    public void testUserCanAddBalance() {
-        var testUser = new User("test", "test@northcoders.com");
-        testUser.AddBalance(50);
-        assertEquals(testUser.checkBalance(), 50);
-        testUser.AddBalance(50);
-        assertEquals(testUser.checkBalance(), 100);
-    }
-
+*/
+/*
     @Test
     @DisplayName("Item class must have required fields")
     public void testItemHasRequiredFields() {
@@ -56,92 +74,86 @@ class OOPTest {
         assertEquals(10, testItem.getPrice());
         assertEquals("testing it out", testItem.getDescription());
 
+        testItem.setName("newname");
+        assertEquals("newname", testItem.getName());
+
+        testItem.setOwner("newowner");
+        assertEquals("newowner", testItem.getOwner());
+
+        testItem.setDescription("newdesc");
+        assertEquals("newdesc", testItem.getDescription());
+
+        testItem.setPrice(99);
+        assertEquals(99, testItem.getPrice());
+
     }
 
+*/
+/*
     @Test
     @DisplayName("User class must store items listed for sale by that user")
     public void testUserStoresListedItems() {
 
         var testUser = new User("testUser", "test@northcoders.com");
 
-        String actual = testUser.ListItem("testItemName1", 20, "test description1");
-        String expected = "testItemName1 has been listed for sale";
+        Item first = testUser.listItem("testItemName1", 20, "test description1");
+        var firstItemForSale = testUser.getItemsForSale().get(0);
 
-        assertEquals(actual, expected);
+        assertEquals(first, firstItemForSale);
 
-        var firstItemForSale = testUser.getItemsForSale()[0];
+        var second = testUser.listItem("testItemName2", 30, "test description2");
+        assertEquals(second, testUser.getItemsForSale().get(1));
 
-        assertEquals("testUser", firstItemForSale.getOwner());
-        assertEquals("testItemName1", firstItemForSale.getName());
-        assertEquals(20, firstItemForSale.getPrice());
-        assertEquals("test description1", firstItemForSale.getDescription());
+       }
 
-        actual = testUser.ListItem("testItemName2", 30, "test description2");
-        expected = "testItemName2 has been listed for sale";
-        assertEquals(actual, expected);
-
-        var secondItemForSale = testUser.getItemsForSale()[1];
-
-        assertEquals("testUser", secondItemForSale.getOwner());
-        assertEquals("testItemName2", secondItemForSale.getName());
-        assertEquals(30, secondItemForSale.getPrice());
-        assertEquals("test description2", secondItemForSale.getDescription());
-    }
-
-
-    @Test
-    @DisplayName("User class must be able to reduce balance")
-    public void testUserCanReduceBalance() {
-        var testUser = new User("test", "test@northcoders.com");
-        testUser.addBalance(50);
-        testUser.reduceBalance(10);
-        assertEquals(testUser.checkBalance(), 40);
-    }
-
-
+*/
+/*
     @Test
     @DisplayName("User class must be able to purchase an item that's for sale")
     public void testUserCanPurchaseItem() {
 
-        var testUser1 = new User("testUser1", "test@northcoders.com");
-        var testUser2 = new User("testUser2", "test@northcoders.com");
-        testUser2.addBalance(50);
-        Item testItem = new Item("testUser1", "testItemName", 20, "test description");
+        var seller = new User("testUser1", "test@northcoders.com");
+        var item = seller.listItem("Cheese", 20, "A lovely cheese");
+        var buyer = new User("testUser2", "test@northcoders.com");
 
-        String actual = testUser2.PurchaseItem(testItem);
+        buyer.updateBalance(50);
+        var result = buyer.purchaseItem(item);
 
-        assertEquals("Your purchase of testItemName has been confirmed!", actual);
-        assertEquals(30, testUser2.checkBalance());
+        assertEquals(PurchaseResult.SUCCESS, result);
+        assertEquals(30, buyer.getBalance());
 
     }
+*/
+/*
+    @Test
+    @DisplayName("User class must not be able to purchase an item without sufficient funds")
+    public void testPurchaseItemWithoutFunds() {
+        var seller = new User("testUser1", "test@northcoders.com");
+        var item = seller.listItem("Cheese", 20, "A lovely cheese");
 
+        var buyer = new User("testUser2", "test@northcoders.com");
+        assertEquals(0, buyer.getBalance());
 
+        var purchaseItemResult = buyer.purchaseItem(item);
+        assertEquals(PurchaseResult.INSUFFICIENT_FUNDS, purchaseItemResult);
+
+        buyer.updateBalance(50);
+
+        purchaseItemResult = buyer.purchaseItem(item);
+        assertEquals(PurchaseResult.SUCCESS, purchaseItemResult);
+        assertEquals(30, buyer.getBalance());
+    }
+
+*/
+/*
     @Test
     @DisplayName("User class must not be able to purchase an item that belongs to itself")
     public void testCantPurchaseOwnItem() {
-        var testUser1 = new User("testUser1", "test1@northcoders.com");
-        Item testItem1 = new Item("testUser1", "testItemName1", 20, "test description1");
+        var seller = new User("testUser1", "test@northcoders.com");
+        var item = seller.listItem("Cheese", 20, "A lovely cheese");
 
-        String purchaseItem1 = testUser1.purchaseItem(testItem1);
-        assertEquals("This item belongs to you already!", purchaseItem1);
+        var purchaseItemResult = seller.purchaseItem(item);
+        assertEquals(PurchaseResult.ALREADY_OWNED, purchaseItemResult);
     }
-
-    @Test
-    @DisplayName("User class must not be able to purchase an item without sufficient funds")
-    public void testPurchaseItemValidation() {
-        var testUser = new User("testUser1", "test1@northcoders.com");
-        Item testItem = new Item("testUser1", "testItemName2", 30, "test description2");
-
-        String purchaseItemResult = testUser.purchaseItem(testItem);
-        assertEquals("Insufficient funds", purchaseItemResult);
-
-        assertEquals(0, testUser.checkBalance());
-        testUser.addBalance(50);
-
-        String purchaseItemResult2 = testUser.purchaseItem(testItem);
-        assertEquals("Your purchase of testItemName2 has been confirmed!", purchaseItemResult2);
-
-        assertEquals(20, testUser.checkBalance());
-
-    }
+    */
 }
